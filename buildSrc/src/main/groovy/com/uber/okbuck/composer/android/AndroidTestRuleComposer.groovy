@@ -31,10 +31,7 @@ final class AndroidTestRuleComposer extends AndroidBuckRuleComposer {
         providedDeps.addAll(external(target.testProvided.externalDeps))
         providedDeps.addAll(targets(target.testProvided.targetDeps))
         providedDeps.removeAll(testDeps)
-
-        if (target.retrolambda) {
-            providedDeps.add(RetrolambdaUtil.getRtStubJarRule())
-        }
+        providedDeps.add(RetrolambdaUtil.getRtStubJarRule())
 
         return new AndroidTestRule(
                 target.testRuleType,

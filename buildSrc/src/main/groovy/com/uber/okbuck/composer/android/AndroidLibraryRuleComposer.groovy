@@ -30,10 +30,7 @@ final class AndroidLibraryRuleComposer extends AndroidBuckRuleComposer {
         providedDeps.addAll(external(target.provided.externalDeps))
         providedDeps.addAll(targets(target.provided.targetDeps))
         providedDeps.removeAll(libraryDeps)
-
-        if (target.retrolambda) {
-            providedDeps.add(RetrolambdaUtil.getRtStubJarRule())
-        }
+        providedDeps.add(RetrolambdaUtil.getRtStubJarRule())
 
         libraryDeps.addAll(target.main.targetDeps.findAll { Target targetDep ->
             targetDep instanceof AndroidTarget

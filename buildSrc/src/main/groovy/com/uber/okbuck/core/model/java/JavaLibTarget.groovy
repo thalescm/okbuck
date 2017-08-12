@@ -44,8 +44,7 @@ class JavaLibTarget extends JavaTarget {
     }
 
     boolean getRetrolambda() {
-        return project.plugins.hasPlugin("me.tatarka.retrolambda") &&
-                JavaVersion.toVersion(sourceCompatibility) > JavaVersion.VERSION_1_7
+        return false
     }
 
     List<String> getPostprocessClassesCommands() {

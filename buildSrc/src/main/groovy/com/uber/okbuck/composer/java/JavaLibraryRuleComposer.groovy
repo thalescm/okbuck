@@ -29,10 +29,7 @@ final class JavaLibraryRuleComposer extends JvmBuckRuleComposer {
         providedDeps.addAll(external(target.provided.externalDeps))
         providedDeps.addAll(targets(target.provided.targetDeps))
         providedDeps.removeAll(deps)
-
-        if (target.retrolambda) {
-            providedDeps.add(RetrolambdaUtil.getRtStubJarRule())
-        }
+        providedDeps.add(RetrolambdaUtil.getRtStubJarRule())
 
         List<String> testTargets = []
         if (target.test.sources) {

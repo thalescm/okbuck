@@ -27,10 +27,7 @@ final class JavaTestRuleComposer extends JvmBuckRuleComposer {
         providedDeps.addAll(external(target.testProvided.externalDeps))
         providedDeps.addAll(targets(target.testProvided.targetDeps))
         providedDeps.removeAll(deps)
-
-        if (target.retrolambda) {
-            providedDeps.add(RetrolambdaUtil.getRtStubJarRule())
-        }
+        providedDeps.add(RetrolambdaUtil.getRtStubJarRule())
 
         new JavaTestRule(
                 ruleType,
