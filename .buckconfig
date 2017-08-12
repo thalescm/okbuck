@@ -18,8 +18,7 @@
   default_android_manifest_path = src/main/AndroidManifest.xml
 
 [log]
-  max_traces = 5
-  compress_traces = true
+  max_traces = 25
 
 [groovy]
   groovy_home = tools/groovy_installation
