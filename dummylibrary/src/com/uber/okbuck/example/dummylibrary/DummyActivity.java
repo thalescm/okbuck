@@ -11,8 +11,6 @@ public class DummyActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         String mock = "Mock string from DummyActivity";
-        new Thread(() -> System.out.println(mock + " 1")).start();
-        dummyCall(System.out::println, mock + " 2");
     }
 
     private void dummyCall(DummyJavaClass.DummyInterface dummyInterface, String val) {

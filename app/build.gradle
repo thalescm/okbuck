@@ -60,6 +60,7 @@ dependencies {
     compile deps.external.leakCanary
     compile deps.external.xlogAndroidIdle
     compile deps.apt.autoValue
+    compile deps.external.timber
 
     compile project(':libraries:emptylibrary')
     compile project(':libraries:kotlinandroidlibrary')

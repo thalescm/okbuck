@@ -49,6 +49,7 @@ def external = [
         rxjava         : 'io.reactivex.rxjava2:rxjava:2.1.1',
         rxPermissions  : 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4',
         sqlite         : 'com.pushtorefresh.storio:sqlite:1.13.0',
+        timber         : "com.jakewharton.timber:timber:4.6.0",
         xlogAndroidIdle: 'com.github.promeg:xlog-android-idle:2.1.1',
 ]
 

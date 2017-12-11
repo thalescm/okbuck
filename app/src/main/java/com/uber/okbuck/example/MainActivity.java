@@ -34,6 +34,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+import timber.log.Timber;
+
 @XLog
 public class MainActivity extends AppCompatActivity {
     @Inject
@@ -65,13 +67,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Timber.d("Test");
         setContentView(R.layout.activity_main);
         mUnbinder = ButterKnife.bind(this);
 
         View view = findViewById(android.R.id.content);
-        if (view != null) {
-            view.setOnClickListener(v -> Log.d("TAG", "Hello, lambda! My view is: " + v));
-        }
 
         DummyComponent component = DaggerDummyComponent.builder().build();
         component.inject(this);
@@ -79,11 +79,6 @@ public class MainActivity extends AppCompatActivity {
         mTextView.setText(
                 String.format("%s %s, --from %s.", getString(R.string.dummy_library_android_str),
                         mDummyAndroidClass.getAndroidWord(this), mDummyJavaClass.getJavaWord()));
-
-        if (BuildConfig.CAN_JUMP) {
-            mTextView.setOnClickListener(
-                    v -> startActivity(new Intent(MainActivity.this, DummyActivity.class)));
-        }
 
         Log.d("test", "1 + 2 = " + new Calc(new CalcMonitor(this)).add(1, 2));
 

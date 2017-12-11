@@ -21,6 +21,14 @@ allprojects { project ->
         jcenter()
         google()
     }
+    configurations {
+        all*.exclude group: 'org.jetbrains'
+    }
+    afterEvaluate {
+        configurations {
+            all*.exclude group: 'org.jetbrains'
+        }
+    }
 }
 
 apply plugin: 'com.uber.okbuck'
@@ -59,8 +67,8 @@ def addCommonConfigurationForAndroidModules(Project project) {
         }
 
         compileOptions {
-            sourceCompatibility JavaVersion.VERSION_1_8
-            targetCompatibility JavaVersion.VERSION_1_8
+            sourceCompatibility JavaVersion.VERSION_1_7
+            targetCompatibility JavaVersion.VERSION_1_7
         }
 
         lintOptions {
@@ -73,9 +81,6 @@ def addCommonConfigurationForAndroidModules(Project project) {
         project.android {
             defaultConfig {
                 // Silly option to keep AGP happy till we can upgrade to 3.x
-                jackOptions {
-                    enabled true
-                }
             }
 
             signingConfigs {
