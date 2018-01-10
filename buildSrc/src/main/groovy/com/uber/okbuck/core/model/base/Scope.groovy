@@ -176,9 +176,12 @@ class Scope {
             }
         }
 
-//        // Download sources if needed
-//        if (project.rootProject.okbuck.intellij.sources) {
-//            DependencyUtils.downloadSourceJars(project, configurations)
-//        }
+        if (project.rootProject.okbuck.intellij.sources) {
+            Set<ComponentIdentifier> ids = artifacts.collect { artifact ->
+                artifact.getId().getComponentIdentifier()
+            }
+            ProjectUtil.downloadSources(project, ids)
+        }
     }
+
 }

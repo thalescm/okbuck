@@ -41,15 +41,6 @@ final class DependencyUtils {
         return cacheDir
     }
 
-    static void downloadSourceJars(Project project, Set<Configuration> configurations) {
-        new IdeDependenciesExtractor().extractRepoFileDependencies(
-                project.dependencies,
-                configurations,
-                [],
-                true,
-                false)
-    }
-
     static boolean isWhiteListed(File depFile) {
         return WHITELIST_LOCAL_PATTERNS.find { depFile.absolutePath.contains(it) } != null
     }
