@@ -101,6 +101,8 @@ public final class ProjectUtil {
                 .orElse(null);
     }
 
+
+    // Taken from AGP 3.1.0 ArtifactDependencyGraph
     private static void downloadSources(
             Project project,
             Set<ComponentIdentifier> artifacts) {
