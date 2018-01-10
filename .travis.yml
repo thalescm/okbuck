@@ -47,9 +47,9 @@ script:
       fi
     fi
   - ./buckw test --include unit
-  - android-wait-for-emulator
-  - adb shell input keyevent 82
 # disable for now as emulator fails to start on travis CI
+#  - android-wait-for-emulator
+#  - adb shell input keyevent 82
 #  - ./buckw test //app:instrumentation_demoDebug_test
 
 notifications:
