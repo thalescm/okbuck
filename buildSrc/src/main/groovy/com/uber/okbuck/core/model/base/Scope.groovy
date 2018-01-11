@@ -44,7 +44,7 @@ class Scope {
     final Set<ExternalDependency> external = new HashSet<>()
 
     protected Scope(Project project,
-                    Set<Configuration> configurations,
+                    Configuration configuration,
                     Set<File> sourceDirs,
                     @Nullable File resDir,
                     List<String> jvmArguments,
@@ -56,17 +56,27 @@ class Scope {
         jvmArgs = jvmArguments
         this.depCache = depCache
 
-        extractConfigurations(configurations)
+        extractConfiguration(configuration)
     }
 
     static Scope from(Project project,
-                      Set<String> configurations,
+                      String configuration,
                       Set<File> sourceDirs = ImmutableSet.of(),
                       @Nullable File resDir = null,
                       List<String> jvmArguments = ImmutableList.of(),
                       DependencyCache depCache = ProjectUtil.getDependencyCache(project)) {
-        Set<Configuration> useful = DependencyUtils.useful(project, configurations)
-        String key = useful.collect { it.name }.toSorted().join("_")
+        Configuration useful = DependencyUtils.useful(project, configuration)
+        return from(project, useful, sourceDirs, resDir, jvmArguments, depCache)
+    }
+
+    static Scope from(Project project,
+                      Configuration configuration,
+                      Set<File> sourceDirs = ImmutableSet.of(),
+                      @Nullable File resDir = null,
+                      List<String> jvmArguments = ImmutableList.of(),
+                      DependencyCache depCache = ProjectUtil.getDependencyCache(project)) {
+        Configuration useful = DependencyUtils.useful(configuration)
+        String key = useful ? useful.name : "n/a"
         return ProjectUtil.getScopes(project)
                 .computeIfAbsent(project, { new ConcurrentHashMap<>() })
                 .computeIfAbsent(key,
@@ -108,43 +118,40 @@ class Scope {
         }).getArtifacts().getArtifacts()
     }
 
-    private static Set<ResolvedArtifactResult> getArtifacts(Set<Configuration> configurations) {
-        Set<ResolvedArtifactResult> artifactResults = configurations.collect { config ->
-            return ImmutableSet.builder()
-                    .addAll(getArtifacts(config, "aar"))
-                    .addAll(getArtifacts(config, "jar"))
+    /*
+     * Resolves the configuration using the Variant Attribute and returns the aar/jar artifacts
+     */
+    private static Set<ResolvedArtifactResult> getArtifacts(Configuration configuration) {
+        Set<ResolvedArtifactResult> artifactResults =
+                ImmutableSet.builder()
+                    .addAll(getArtifacts(configuration, "aar"))
+                    .addAll(getArtifacts(configuration, "jar"))
                     .build()
-
-        }.flatten() as Set<ResolvedArtifactResult>
 
         artifactResults = artifactResults.findAll { it -> it.file.name != 'classes.jar' }
 
         return artifactResults
     }
 
-    private void extractConfigurations(Set<Configuration> configurations) {
-        if (configurations.size() == 0) {
+    private void extractConfiguration(Configuration configuration) {
+        if (!configuration) {
             return
         }
 
-        boolean resolveDups = configurations.size() > 1
+        Set<ResolvedArtifactResult> artifacts = getArtifacts(configuration)
 
-        SortedSetMultimap<VersionlessDependency, ExternalDependency> greatest
-        if (resolveDups) {
-            greatest = MultimapBuilder.hashKeys().treeSetValues().build()
-        }
-
-        Set<ResolvedArtifactResult> artifacts = getArtifacts(configurations)
+        Set<ComponentIdentifier> artifactIds = new HashSet<>();
 
         artifacts.each { ResolvedArtifactResult artifact ->
             if (!DependencyUtils.isConsumable(artifact.file)) {
                 return
             }
             ComponentIdentifier identifier = artifact.id.componentIdentifier
+            artifactIds.add(identifier)
             if (identifier instanceof ProjectComponentIdentifier) {
 
                 String variant = artifact.variant.attributes.getAttribute(VariantAttr.ATTRIBUTE)
-                targetDeps.add(ProjectUtil.getTargetForOutput(
+                targetDeps.add(ProjectUtil.getTargetForVariant(
                         project.project(identifier.projectPath), variant))
 
             } else if (identifier instanceof ModuleComponentIdentifier && identifier.version) {
@@ -154,11 +161,7 @@ class Scope {
                         identifier.version,
                         artifact.file
                 )
-                if (resolveDups) {
-                    greatest.put(externalDependency.versionless, externalDependency)
-                } else {
-                    external.add(externalDependency)
-                }
+                external.add(externalDependency)
             } else {
                 if (!FilenameUtils.directoryContains(project.rootProject.projectDir.absolutePath,
                         artifact.file.absolutePath) && !DependencyUtils.isWhiteListed(artifact.file)) {
@@ -170,17 +173,8 @@ class Scope {
             }
         }
 
-        if (resolveDups) {
-            greatest.keySet().each {
-                external.add(greatest.get(it).first())
-            }
-        }
-
         if (project.rootProject.okbuck.intellij.sources) {
-            Set<ComponentIdentifier> ids = artifacts.collect { artifact ->
-                artifact.getId().getComponentIdentifier()
-            }
-            ProjectUtil.downloadSources(project, ids)
+            ProjectUtil.downloadSources(project, artifactIds)
         }
     }
 
