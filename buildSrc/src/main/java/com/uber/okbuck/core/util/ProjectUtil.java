@@ -133,7 +133,7 @@ public final class ProjectUtil {
             ArtifactResolutionResult queryResult = query.execute();
             queryResult.getResolvedComponents();
         } catch (Throwable t) {
-            System.out.println("Unable to download sources/javadoc for project " +
+            System.out.println("Unable to download sources for project " +
                     project.toString() + " with error " + t.toString());
         }
     }
