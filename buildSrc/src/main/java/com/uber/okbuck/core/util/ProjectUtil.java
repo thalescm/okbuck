@@ -131,25 +131,7 @@ public final class ProjectUtil {
                     (Class<? extends Artifact>[]) new Class<?>[] {SourcesArtifact.class};
             query.withArtifacts(JvmLibrary.class, artifactTypesArray);
             ArtifactResolutionResult queryResult = query.execute();
-            Set<ComponentArtifactsResult> resolvedComponents = queryResult.getResolvedComponents();
-
-            // Create and execute another query to attempt javadoc resolution
-            // where sources are not available
-            Set<ComponentIdentifier> remainingToResolve = Sets.newHashSet();
-            for (ComponentArtifactsResult componentResult : resolvedComponents) {
-                Set<ArtifactResult> sourcesArtifacts =
-                        componentResult.getArtifacts(SourcesArtifact.class);
-                if (sourcesArtifacts.isEmpty()) {
-                    remainingToResolve.add(componentResult.getId());
-                }
-            }
-            if (!remainingToResolve.isEmpty()) {
-                artifactTypesArray[0] = JavadocArtifact.class;
-                query = dependencies.createArtifactResolutionQuery();
-                query.forComponents(remainingToResolve);
-                query.withArtifacts(JvmLibrary.class, artifactTypesArray);
-                query.execute().getResolvedComponents();
-            }
+            queryResult.getResolvedComponents();
         } catch (Throwable t) {
             System.out.println("Unable to download sources/javadoc for project " +
                     project.toString() + " with error " + t.toString());
