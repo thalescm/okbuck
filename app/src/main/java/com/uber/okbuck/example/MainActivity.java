@@ -44,10 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Unbinder mUnbinder;
 
-    @BindView(R2.id.mTextView)
     TextView mTextView;
-
-    @BindView(R2.id.mTextView2)
     TextView mTextView2;
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -66,6 +63,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mTextView = findViewById(R.id.mTextView);
+        mTextView2 = findViewById(R.id.mTextView2);
         mUnbinder = ButterKnife.bind(this);
 
         View view = findViewById(android.R.id.content);
@@ -118,11 +118,24 @@ public class MainActivity extends AppCompatActivity {
 
         KotlinDataClass data = new KotlinDataClass("foo", R.string.foo);
         Pojo pojo = new Pojo();
+
+        new A().foo();
     }
 
     @Override
     protected void onDestroy() {
         mUnbinder.unbind();
         super.onDestroy();
+    }
+
+    public static class A {
+        void foo() {
+            System.out.println(B.DEFAULT.log("test"));
+        }
+
+        public interface B {
+            B DEFAULT = x -> x;
+            String log(String x);
+        }
     }
 }

@@ -11,7 +11,7 @@ import com.example.hellojni.HelloJni;
 import com.uber.okbuck.example.common.Calc;
 import com.uber.okbuck.example.common.CalcMonitor;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends android.app.Activity {
 
     private TextView mTvTest;
 
@@ -25,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
 
         mTvTest = findViewById(R.id.mTvTest);
         mTvTest.setOnClickListener(v -> mTvTest());
+
+        B.DEFAULT.log("test");
     }
 
     void mTvTest() {
@@ -60,5 +62,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    public interface B {
+        B DEFAULT = x -> x;
+        String log(String x);
     }
 }
