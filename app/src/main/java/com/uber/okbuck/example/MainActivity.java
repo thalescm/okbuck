@@ -44,10 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Unbinder mUnbinder;
 
-    @BindView(R2.id.mTextView)
     TextView mTextView;
-
-    @BindView(R2.id.mTextView2)
     TextView mTextView2;
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -65,7 +62,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        RibletViewProvider.Factory factory = hostRouter -> new RibletViewProvider(hostRouter) {
+          @Override
+          public void buildViewRouter() {
+              System.out.println(this.hostRouter);
+          }
+        };
+
+        Router router = new Router(7);
+        new Transaction.DynamicBuilder(factory).build(router);
+
         setContentView(R.layout.activity_main);
+
+        mTextView = findViewById(R.id.mTextView);
+        mTextView2 = findViewById(R.id.mTextView2);
         mUnbinder = ButterKnife.bind(this);
 
         View view = findViewById(android.R.id.content);
@@ -126,3 +136,57 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 }
+
+class Transaction<D> {
+
+    public static final class DynamicBuilder<D> {
+        private ViewProviderFactory<D> viewProviderFactory;
+
+        DynamicBuilder(final ViewProviderFactory<D> provider) {
+             viewProviderFactory = provider;
+        }
+
+        public Transaction build(D dependency) {
+            viewProviderFactory.create(dependency);
+            return new Transaction();
+        }
+    }
+}
+
+abstract class RibletViewProvider extends ViewProvider {
+
+  public final Router hostRouter;
+
+  public RibletViewProvider(Router hostRouter) {
+    this.hostRouter = hostRouter;
+  }
+
+  public abstract void buildViewRouter();
+
+  public interface Factory extends ViewProviderFactory<Router> {
+
+    @Override
+    RibletViewProvider create(Router hostRouter);
+  }
+}
+
+class Router {
+    int a;
+    Router(int a) {
+        this.a = a;
+    }
+
+    @Override
+    public String toString() {
+        return "Router " + this.a;
+    }
+}
+
+abstract class ViewProvider {
+
+}
+
+interface ViewProviderFactory<D> {
+  ViewProvider create(D dependency);
+}
+
