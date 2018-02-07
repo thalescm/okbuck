@@ -1,5 +1,17 @@
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath "net.ltgt.gradle:gradle-errorprone-plugin:0.0.13"
+  }
+}
+
 apply plugin: 'com.android.application'
 apply plugin: 'com.squareup.sqldelight'
+apply plugin: 'net.ltgt.errorprone'
 
 android {
     defaultConfig {
@@ -81,6 +93,8 @@ dependencies {
 
     androidTestImplementation deps.test.espressoCore
     androidTestImplementation deps.test.espressoRunner
+
+    errorprone "com.google.errorprone:error_prone_core:2.2.0"
 }
 
 android.testVariants.all { variant ->
