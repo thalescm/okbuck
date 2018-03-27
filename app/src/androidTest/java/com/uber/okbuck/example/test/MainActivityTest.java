@@ -1,5 +1,6 @@
 package com.uber.okbuck.example.test;
 
+import android.support.test.espresso.action.ViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -26,6 +27,13 @@ public class MainActivityTest {
     @Test
     public void checkTextDisplayed() {
         onView(withId(R.id.mTextView2)).check(matches(withText("test in app")));
+    }
+
+    @Test
+    public void checkWeCanUseResourcesInMainApp() {
+        onView(withId(R.id.mTextView3)).check(matches(withText("Click to open resources")));
+        onView(withId(R.id.mTextView3)).perform(ViewActions.click());
+        onView(withId(R.id.mTextView3)).check(matches(withText("data")));
     }
 
     @Test

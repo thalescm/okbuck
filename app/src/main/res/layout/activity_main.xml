@@ -22,4 +22,15 @@
         android:layout_marginTop="30dp"
         android:text="@string/test_string"
         android:textColor="@color/button_material_light" />
+
+    <com.uber.okbuck.example.CustomView
+        android:id="@+id/mTextView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:text="@string/resources_string"
+        android:textColor="@color/button_material_dark" />
+
+
 </LinearLayout>

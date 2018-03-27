@@ -24,6 +24,10 @@ import com.uber.okbuck.example.sqldelightmodel.GithubUser;
 import com.uber.okbuck.java.Pojo;
 import com.uber.okbuck.kotlin.KotlinDataClass;
 
+import org.json.JSONException;
+
+import java.io.IOException;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -36,6 +40,7 @@ import io.reactivex.schedulers.Schedulers;
 
 @XLog
 public class MainActivity extends AppCompatActivity {
+
     @Inject
     DummyJavaClass mDummyJavaClass;
     @Inject
@@ -49,6 +54,9 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R2.id.mTextView2)
     TextView mTextView2;
+
+    @BindView(R2.id.mTextView3)
+    TextView mTextView3;
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
@@ -118,6 +126,16 @@ public class MainActivity extends AppCompatActivity {
 
         KotlinDataClass data = new KotlinDataClass("foo", R.string.foo);
         Pojo pojo = new Pojo();
+
+        mTextView3.setOnClickListener((v) -> {
+            //assert resources file
+            ResourcesClient client = new ResourcesClient();
+            try {
+                mTextView3.setText(client.usesResourcesCorrectly());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     @Override
