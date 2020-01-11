@@ -52,4 +52,7 @@ dependencies {
     androidTestImplementation deps.test.espressoRunner
     androidTestImplementation deps.test.espressoCore
     androidTestImplementation deps.test.espressoRules
+
+    implementation "androidx.room:room-runtime:2.2.3"
+    kapt "androidx.room:room-compiler:2.2.3"
 }
