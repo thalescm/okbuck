@@ -29,8 +29,8 @@ def versions = [
         androidxMultidex   : "2.0.0",
         constraintLayout   : "1.1.0",
         scalaMajor         : "2.11",
-        spark              : "2.1.0"
-
+        spark              : "2.1.0",
+        room               : "2.2.3",
 ]
 
 def build = [
@@ -71,6 +71,7 @@ def apt = [
         daggerCompiler        : "com.google.dagger:dagger-compiler:${versions.dagger}",
         daggerAndroidProcessor: "com.google.dagger:dagger-android-processor:${versions.dagger}",
         javax                 : "org.glassfish:javax.annotation:10.0-b28",
+        roomCompiler          : "androidx.room:room-compiler:${versions.room}"
 ]
 
 def external = [
@@ -95,6 +96,7 @@ def external = [
         sparkSql        : exclude("org.apache.spark:spark-sql_${versions.scalaMajor}:${versions.spark}", "org.scalatest"),
         log4j           : exclude("log4j:log4j:1.2.15", "jline", "jms", "jmxtools", "jmxri"),
         guava           : "com.google.guava:guava:26.0-jre",
+        roomRuntime     : "androidx.room:room-runtime:${versions.room}"
 ]
 
 def lint = [

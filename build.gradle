@@ -223,6 +223,7 @@ okbuck {
             "autoValueAnnotations",
             "autoValueGson",
             "autoValueParcel",
+            "autoValueGsonRoom"
         ]
     }
 
@@ -257,6 +258,7 @@ okbuck {
 
 def autoValueDeps = [deps.apt.autoValue, deps.apt.autoValueAnnotations]
 def autoValueGsonDeps = autoValueDeps + [deps.apt.autoValueGson]
+def autoValueGsonRoomDeps = autoValueGsonDeps + [deps.apt.roomCompiler]
 def autoValueParcelDeps = autoValueDeps + [deps.apt.autoValueParcel]
 
 afterEvaluate {
@@ -265,6 +267,7 @@ afterEvaluate {
 
         autoValueAnnotations autoValueDeps
         autoValueGson autoValueGsonDeps
+        autoValueGsonRoom autoValueGsonRoomDeps
         autoValueParcel autoValueParcelDeps
     }
 }
